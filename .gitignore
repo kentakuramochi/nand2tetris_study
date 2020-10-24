@@ -1,6 +1,7 @@
-.tst
-.cmp
-.out
-.hack
+*.tst
+*.cmp
+*.out
+*.hack
+/00
 /demo
 
