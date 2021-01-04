@@ -36,8 +36,6 @@ public:
 
     COMMANDTYPE commandType() { return this->cType; }
 
-    std::string current() { return this->currentLine; }
-
     std::string symbol() { return this->cSymbol; }
     std::string dest()   { return this->cDest; }
     std::string comp()   { return this->cComp; }

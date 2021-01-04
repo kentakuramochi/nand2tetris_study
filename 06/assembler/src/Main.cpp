@@ -17,8 +17,8 @@ int main(int argc, char *argv[])
     while (parser.hasMoreCommands()) {
         // under implementation
         parser.advance();
-        std::cout << ">> " << parser.current() << std::endl;
 
+        std::cout << ">> ";
         if (parser.commandType() == COMMANDTYPE::A_COMMAND) {
             std::cout << "A command: A=" << parser.symbol() << std::endl;
         } else if (parser.commandType() == COMMANDTYPE::C_COMMAND) {
@@ -31,4 +31,3 @@ int main(int argc, char *argv[])
 
     return EXIT_SUCCESS;
 }
-
