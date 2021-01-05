@@ -19,7 +19,7 @@ RM := rm -rf
 all: dir $(PROG)
 
 dir:
-	mkdir -p $(BINDIR)
+	@mkdir -p $(BINDIR)
 
 $(PROG): $(OBJS)
 	$(CXX) $(CXXFLAGS) -O2 $(INCLUDE) $^ -o $@
