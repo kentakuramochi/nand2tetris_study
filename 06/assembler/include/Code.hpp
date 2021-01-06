@@ -12,11 +12,11 @@ public:
 
     ~Code();
 
-    uint8_t dest(std::string mnemonic);
+    uint8_t dest(const std::string mnemonic);
 
-    uint8_t comp(std::string mnemonic);
+    uint8_t comp(const std::string mnemonic);
 
-    uint8_t jump(std::string mnemonic);
+    uint8_t jump(const std::string mnemonic);
 };
 
 #endif

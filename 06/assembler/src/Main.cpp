@@ -13,20 +13,27 @@ int main(int argc, char *argv[])
     }
 
     Parser parser(argv[1]);
+    Code code;
+
+    uint16_t val;
 
     while (parser.hasMoreCommands()) {
-        // under implementation
         parser.advance();
 
-        std::cout << ">> ";
         if (parser.commandType() == COMMANDTYPE::A_COMMAND) {
-            std::cout << "A command: A=" << parser.symbol() << std::endl;
+            // A commend
+            val = (std::strtoul(parser.symbol().c_str(), nullptr, 10) & 0x7fff);
         } else if (parser.commandType() == COMMANDTYPE::C_COMMAND) {
-            std::cout << "C command:" <<
-            "dest=" << parser.dest() << " cmp=" << parser.comp() << " jmp=" << parser.jump() << std::endl;
-        } else if (parser.commandType() == COMMANDTYPE::L_COMMAND) {
-            std::cout << "Label \"" << parser.symbol() << "\"" << std::endl;
+            // C command
+            val = (0xe << 12) |
+                  (code.dest(parser.dest()) << 6) |
+                  (code.comp(parser.comp()) << 3) |
+                  (code.jump(parser.jump()));
+        } else {
+            // Label
         }
+
+        std::cout << "0x" << std::hex << val << std::endl;
     }
 
     return EXIT_SUCCESS;
