@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <bitset>
 
 #include "Parser.hpp"
 #include "Code.hpp"
@@ -33,7 +34,7 @@ int main(int argc, char *argv[])
             // Label
         }
 
-        std::cout << "0x" << std::hex << val << std::endl;
+        std::cout << std::bitset<16>(val) << std::endl;
     }
 
     return EXIT_SUCCESS;

@@ -31,10 +31,6 @@ uint8_t Code::dest(const std::string mnemonic)
 
 uint8_t Code::comp(const std::string mnemonic)
 {
-    if (mnemonic.empty()) {
-        return 0x0;
-    }
-
     if (mnemonic.compare("0")) {
         // 010 1010
         return 0x2a;
@@ -72,19 +68,56 @@ uint8_t Code::comp(const std::string mnemonic)
         // 111 0011
         return 0x73;
     } else if (mnemonic.compare("D+1")) {
-        // 000 1111
-        return 0x0f;
-    } else if (mnemonic.compare("A+1)")) {
-        // 011 0011
-        return 0x33;
+        // 011 1111
+        return 0x3f;
+    } else if (mnemonic.compare("A+1")) {
+        // 011 0111
+        return 0x37;
     } else if (mnemonic.compare("M+1")) {
-        // 111 0011
-        return 0x73;
-    } else {
+        // 111 0111
+        return 0x77;
+    } else if (mnemonic.compare("D-1")) {
+        // 000 1110
+        return 0x3f;
+    } else if (mnemonic.compare("A-1")) {
+        // 011 0010
+        return 0x32;
+    } else if (mnemonic.compare("M-1")) {
+        // 111 0010
+        return 0x72;
+    } else if (mnemonic.compare("D+A")) {
+        // 000 0010
+        return 0x02;
+    } else if (mnemonic.compare("D+M")) {
+        // 100 0010
+        return 0x42;
+    } else if (mnemonic.compare("D-A")) {
+        // 001 0011
+        return 0x13;
+    } else if (mnemonic.compare("D-M")) {
+        // 101 0011
+        return 0x53;
+    } else if (mnemonic.compare("A-D")) {
+        // 000 0111
+        return 0x07;
+    } else if (mnemonic.compare("M-D")) {
+        // 100 0111
+        return 0x47;
+    } else if (mnemonic.compare("D&A")) {
+        // 000 0000
         return 0x00;
+    } else if (mnemonic.compare("D&M")) {
+        // 100 0000
+        return 0x40;
+    } else if (mnemonic.compare("D|A")) {
+        // 010 0101
+        return 0x25;
+    } else if (mnemonic.compare("D|M")) {
+        // 110 0101
+        return 0x65;
     }
 
-    return 0;
+    return 0x2a; // 0
 }
 
 uint8_t Code::jump(const std::string mnemonic)
