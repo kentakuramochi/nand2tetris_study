@@ -9,12 +9,23 @@
 int main(int argc, char *argv[])
 {
     if (argc < 2) {
-        std::cout << "error: HACK assembler src file (*.asm) is required" << std::endl;
+        std::cerr << "error: HACK assembler src file (*.asm) is required" << std::endl;
         std::exit(EXIT_FAILURE);
     }
 
-    Parser parser(argv[1]);
+    std::string in_file(argv[1]);
+    auto pos_ext = in_file.find(".asm");
+
+    if (pos_ext == std::string::npos) {
+        std::cerr << "error: HACK assembler src file (*.asm) is required" << std::endl;
+        std::exit(EXIT_FAILURE);
+    }
+
+    Parser parser(in_file);
     Code code;
+
+    auto out_file = in_file.substr(0, in_file.find(".asm")) + ".hack";
+    std::ofstream ofs(out_file);
 
     uint16_t val;
 
@@ -34,8 +45,10 @@ int main(int argc, char *argv[])
             // Label
         }
 
-        std::cout << std::bitset<16>(val) << std::endl;
+        ofs << std::bitset<16>(val) << std::endl;
     }
+
+    ofs.close();
 
     return EXIT_SUCCESS;
 }
