@@ -1,7 +1,21 @@
 #!/bin/bash
 
-# test for non label
-#./bin/asm ../add/Add.asm    > ./bin/Add.hack
-#./bin/asm ../max/MaxL.asm   > ./bin/MaxL.hack
-./bin/asm ../add/Add.asm
-./bin/asm ../max/MaxL.asm
+HASM_REF=../../../tools/Assembler.sh
+HASM=./bin/asm
+
+test_asm() {
+    HACK=${1/.asm/.hack}
+
+    ${HASM_REF} $1
+    mv ${HACK} ./bin
+
+    ${HASM} $1
+    mv ${HACK} ./bin
+
+    diff ./bin/$(basename ${HACK}) ${HACK}
+}
+
+# test for no label
+test_asm ../add/Add.asm
+test_asm ../max/MaxL.asm
+
