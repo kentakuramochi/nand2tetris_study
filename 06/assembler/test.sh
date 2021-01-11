@@ -6,22 +6,27 @@ HASM_DIR=./bin
 HASM=${HASM_DIR}/asm
 
 test_asm() {
-    SRC_DIR=$(dirname $1)
-    HACK_BASE=$(basename ${1/.asm/.hack})
+    cp $1 ./
 
-    HACK_REF=${HASM_DIR}/${HACK_BASE/.hack/_ref.hack}
-    HACK=${HASM_DIR}/${HACK_BASE}
+    HACK_SRC=$(basename $1)
+    HACK_OUT=${HACK_SRC/.asm/.hack}
+    HACK_OUT_REF=${HACK_OUT/.hack/_ref.hack}
 
     # reference output
-    ${HASM_REF} $1
-    mv ${SRC_DIR}/${HACK_BASE} ${HACK_REF}
+    echo "reference output:"
+    ${HASM_REF} ${HACK_SRC}
+    mv ${HACK_OUT} ${HACK_OUT_REF}
 
     # output
-    ${HASM} $1
-    mv ${SRC_DIR}/${HACK_BASE} ${HASM}
+    echo "output:"
+    ${HASM} ${HACK_SRC}
 
     # compare
-    diff ${HACK_REF} ${HACK}
+    diff ${HACK_OUT_REF} ${HACK_OUT}
+
+    rm ${HACK_SRC}
+
+    mv ${HACK_OUT} ${HACK_OUT_REF} ${HASM_DIR}
 }
 
 test_asm ../add/Add.asm
