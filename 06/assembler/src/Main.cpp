@@ -38,8 +38,8 @@ int main(int argc, char *argv[])
         } else if (parser.commandType() == COMMANDTYPE::C_COMMAND) {
             // C command
             val = (0xe << 12) |
-                  (code.dest(parser.dest()) << 6) |
-                  (code.comp(parser.comp()) << 3) |
+                  (code.comp(parser.comp()) << 6) |
+                  (code.dest(parser.dest()) << 3) |
                   (code.jump(parser.jump()));
         } else {
             // Label
