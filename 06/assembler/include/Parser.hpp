@@ -15,13 +15,13 @@ enum class COMMANDTYPE
 class Parser
 {
 private:
-    std::ifstream   ifs;
-    std::string     currentLine;
-    COMMANDTYPE     cType;
-    std::string     cSymbol;
-    std::string     cDest;
-    std::string     cComp;
-    std::string     cJump;
+    std::ifstream   ifs_;
+    std::string     currentLine_;
+    COMMANDTYPE     type_;
+    std::string     symbol_;
+    std::string     dest_;
+    std::string     comp_;
+    std::string     jump_;
 
 public:
     Parser(std::string asmFile);
@@ -34,12 +34,12 @@ public:
 
     void advance();
 
-    COMMANDTYPE commandType() { return this->cType; }
+    COMMANDTYPE commandType() { return this->type_; }
 
-    std::string symbol() { return this->cSymbol; }
-    std::string dest()   { return this->cDest; }
-    std::string comp()   { return this->cComp; }
-    std::string jump()   { return this->cJump; }
+    std::string symbol() { return this->symbol_; }
+    std::string dest()   { return this->dest_; }
+    std::string comp()   { return this->comp_; }
+    std::string jump()   { return this->jump_; }
 };
 
 #endif
