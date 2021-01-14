@@ -18,25 +18,36 @@ bool Parser::hasMoreCommands()
     return (this->ifs_.eof()) ? false : true;
 }
 
+static std::string trimComment(std::string str) {
+    auto pos_ds = str.find("//");
+    if (pos_ds != std::string::npos) {
+        str = str.substr(0, pos_ds);
+    }
+    return str;
+}
+
+static std::string trimHeadSpace(std::string str) {
+    while (true) {
+        auto pos_sp = str.find_first_of(" \t\r\n");
+        if (pos_sp != 0) {
+            break;
+        }
+        str.erase(pos_sp, 1);
+    }
+
+    return str;
+}
+
 void Parser::advance()
 {
     while (this->hasMoreCommands()) {
         std::getline(this->ifs_, this->currentLine_);
 
         // remove first space/tab/LF
-        while (true) {
-            auto pos_sp = this->currentLine_.find_first_of(" \t\r\n");
-            if (pos_sp != 0) {
-                break;
-            }
-            this->currentLine_.erase(pos_sp, 1);
-        }
+        this->currentLine_ = trimHeadSpace(this->currentLine_);
 
         // remove comment area
-        auto pos_ds = this->currentLine_.find("//");
-        if (pos_ds != std::string::npos) {
-            this->currentLine_ = this->currentLine_.substr(0, pos_ds);
-        }
+        this->currentLine_ = trimComment(this->currentLine_);
 
         // go next line if empty
         if (this->currentLine_.empty()) {
@@ -86,6 +97,11 @@ void Parser::advance()
         this->comp_ = this->currentLine_.substr(0, pos_sc);
         this->jump_ = this->currentLine_.substr((pos_sc + 1), (this->currentLine_.length() - pos_sc - 2));
     }
+
+    //std::string tmp;
+    //while (true) {
+    //    std::getline(this->ifs_, tmp);
+    //}
 
     return;
 }
