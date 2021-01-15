@@ -13,11 +13,6 @@ Parser::~Parser()
     this->ifs_.close();
 }
 
-bool Parser::hasMoreCommands()
-{
-    return (this->ifs_.eof()) ? false : true;
-}
-
 static std::string trimComment(std::string str) {
     auto pos_ds = str.find("//");
     if (pos_ds != std::string::npos) {
@@ -38,25 +33,28 @@ static std::string trimHeadSpace(std::string str) {
     return str;
 }
 
-void Parser::advance()
+bool Parser::hasMoreCommands()
 {
-    while (this->hasMoreCommands()) {
+    while (!this->ifs_.eof()) {
         std::getline(this->ifs_, this->currentLine_);
-
-        // remove first space/tab/LF
-        this->currentLine_ = trimHeadSpace(this->currentLine_);
 
         // remove comment area
         this->currentLine_ = trimComment(this->currentLine_);
 
-        // go next line if empty
-        if (this->currentLine_.empty()) {
-            continue;
-        }
+        // remove first space/tab/LF
+        this->currentLine_ = trimHeadSpace(this->currentLine_);
 
-        break;
+        // return true if get command string
+        if (!this->currentLine_.empty()) {
+            return true;
+        }
     }
 
+    return false;
+}
+
+void Parser::advance()
+{
     this->symbol_ = "";
     this->dest_   = "";
     this->comp_   = "";
@@ -97,11 +95,6 @@ void Parser::advance()
         this->comp_ = this->currentLine_.substr(0, pos_sc);
         this->jump_ = this->currentLine_.substr((pos_sc + 1), (this->currentLine_.length() - pos_sc - 2));
     }
-
-    //std::string tmp;
-    //while (true) {
-    //    std::getline(this->ifs_, tmp);
-    //}
 
     return;
 }
