@@ -13,7 +13,8 @@ Parser::~Parser()
     this->ifs_.close();
 }
 
-static std::string trimComment(std::string str) {
+static std::string trimComment(std::string str)
+{
     auto pos_ds = str.find("//");
     if (pos_ds != std::string::npos) {
         str = str.substr(0, pos_ds);
@@ -38,11 +39,11 @@ bool Parser::hasMoreCommands()
     while (!this->ifs_.eof()) {
         std::getline(this->ifs_, this->currentLine_);
 
-        // remove comment area
-        this->currentLine_ = trimComment(this->currentLine_);
-
         // remove first space/tab/LF
         this->currentLine_ = trimHeadSpace(this->currentLine_);
+
+        // remove comment area
+        this->currentLine_ = trimComment(this->currentLine_);
 
         // return true if get command string
         if (!this->currentLine_.empty()) {
@@ -51,6 +52,32 @@ bool Parser::hasMoreCommands()
     }
 
     return false;
+}
+
+static std::string getSymbol(std::string str)
+{
+    return str.substr(1, (str.length() - 1));
+}
+
+static std::string getDest(std::string str, std::string::size_type pos_eq)
+{
+    return str.substr(0, pos_eq);
+}
+
+static std::string getComp(std::string str, std::string::size_type pos_eq, std::string::size_type pos_sc)
+{
+    if ((pos_eq != std::string::npos) && (pos_sc != std::string::npos)) {
+        return str.substr((pos_sc + 1), (str.length() - pos_sc - 2));
+    } else if (pos_eq != std::string::npos) {
+        return str.substr((pos_eq + 1), (str.length() - pos_eq - 2));
+    }
+
+    return str.substr(0, pos_sc);
+}
+
+static std::string getJump(std::string str, std::string::size_type pos_sc)
+{
+    return str.substr((pos_sc + 1), (str.length() - pos_sc - 2));
 }
 
 void Parser::advance()
@@ -64,7 +91,7 @@ void Parser::advance()
     auto pos_at = this->currentLine_.find("@");
     if (pos_at != std::string::npos) {
         this->type_ = COMMANDTYPE::A_COMMAND;
-        this->symbol_ = this->currentLine_.substr((pos_at + 1), (this->currentLine_.length() - 1));
+        this->symbol_ = getSymbol(this->currentLine_);
         return;
     }
 
@@ -75,25 +102,25 @@ void Parser::advance()
     // if not delimiters, thought as a label
     if ((pos_eq != std::string::npos) && (pos_sc != std::string::npos)) {
         this->type_ = COMMANDTYPE::L_COMMAND;
-        this->symbol_ = this->currentLine_;
+        this->symbol_ = getSymbol(this->currentLine_);
+        return;
     }
 
     // C command
     this->type_ = COMMANDTYPE::C_COMMAND;
-
     if ((pos_eq != std::string::npos) && (pos_sc != std::string::npos)) {
         // dest=comp;jmp
-        this->dest_ = this->currentLine_.substr(0, pos_eq);
-        this->comp_ = this->currentLine_.substr((pos_eq + 1), pos_sc);
-        this->jump_ = this->currentLine_.substr((pos_sc + 1), (this->currentLine_.length() - pos_sc - 2));
+        this->dest_ = getDest(this->currentLine_, pos_eq);
+        this->comp_ = getComp(this->currentLine_, pos_eq, pos_sc);
+        this->jump_ = getJump(this->currentLine_, pos_sc);
     } else if (pos_eq != std::string::npos) {
         // dest=comp
-        this->dest_ = this->currentLine_.substr(0, pos_eq);
-        this->comp_ = this->currentLine_.substr((pos_eq + 1), (this->currentLine_.length() - pos_eq - 2));
+        this->dest_ = getDest(this->currentLine_, pos_eq);
+        this->comp_ = getComp(this->currentLine_, pos_eq, pos_sc);
     } else {
         // comp;jmp
-        this->comp_ = this->currentLine_.substr(0, pos_sc);
-        this->jump_ = this->currentLine_.substr((pos_sc + 1), (this->currentLine_.length() - pos_sc - 2));
+        this->comp_ = getComp(this->currentLine_, pos_eq, pos_sc);
+        this->jump_ = getJump(this->currentLine_, pos_sc);
     }
 
     return;
