@@ -22,7 +22,8 @@ static std::string trimComment(std::string str)
     return str;
 }
 
-static std::string trimHeadSpace(std::string str) {
+static std::string trimHeadSpace(std::string str)
+{
     while (true) {
         auto pos_sp = str.find_first_of(" \t\r\n");
         if (pos_sp != 0) {
@@ -39,11 +40,11 @@ bool Parser::hasMoreCommands()
     while (!this->ifs_.eof()) {
         std::getline(this->ifs_, this->currentLine_);
 
-        // remove first space/tab/LF
-        this->currentLine_ = trimHeadSpace(this->currentLine_);
-
         // remove comment area
         this->currentLine_ = trimComment(this->currentLine_);
+
+        // remove first space/tab/LF
+        this->currentLine_ = trimHeadSpace(this->currentLine_);
 
         // return true if get command string
         if (!this->currentLine_.empty()) {
@@ -56,7 +57,7 @@ bool Parser::hasMoreCommands()
 
 static std::string getSymbol(std::string str)
 {
-    return str.substr(1, (str.length() - 1));
+    return str.substr(1, (str.length() - 2));
 }
 
 static std::string getDest(std::string str, std::string::size_type pos_eq)
@@ -66,13 +67,10 @@ static std::string getDest(std::string str, std::string::size_type pos_eq)
 
 static std::string getComp(std::string str, std::string::size_type pos_eq, std::string::size_type pos_sc)
 {
-    if ((pos_eq != std::string::npos) && (pos_sc != std::string::npos)) {
-        return str.substr((pos_sc + 1), (str.length() - pos_sc - 2));
-    } else if (pos_eq != std::string::npos) {
-        return str.substr((pos_eq + 1), (str.length() - pos_eq - 2));
-    }
+    std::string::size_type start = (pos_eq == std::string::npos) ? 0 : (pos_eq + 1);
+    std::string::size_type end   = (pos_sc == std::string::npos) ? (str.length() - 1) : pos_sc;
 
-    return str.substr(0, pos_sc);
+    return str.substr(start, (end - start));
 }
 
 static std::string getJump(std::string str, std::string::size_type pos_sc)
@@ -90,7 +88,7 @@ void Parser::advance()
     // A command
     auto pos_at = this->currentLine_.find("@");
     if (pos_at != std::string::npos) {
-        this->type_ = COMMANDTYPE::A_COMMAND;
+        this->type_   = COMMANDTYPE::A_COMMAND;
         this->symbol_ = getSymbol(this->currentLine_);
         return;
     }
@@ -101,7 +99,7 @@ void Parser::advance()
 
     // if not delimiters, thought as a label
     if ((pos_eq != std::string::npos) && (pos_sc != std::string::npos)) {
-        this->type_ = COMMANDTYPE::L_COMMAND;
+        this->type_   = COMMANDTYPE::L_COMMAND;
         this->symbol_ = getSymbol(this->currentLine_);
         return;
     }
