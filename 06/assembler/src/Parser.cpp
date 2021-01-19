@@ -22,11 +22,11 @@ static std::string trimComment(std::string str)
     return str;
 }
 
-static std::string trimHeadSpace(std::string str)
+static std::string trimSpace(std::string str)
 {
     while (true) {
         auto pos_sp = str.find_first_of(" \t\r\n");
-        if (pos_sp != 0) {
+        if (pos_sp == std::string::npos) {
             break;
         }
         str.erase(pos_sp, 1);
@@ -43,8 +43,8 @@ bool Parser::hasMoreCommands()
         // remove comment area
         this->currentLine_ = trimComment(this->currentLine_);
 
-        // remove first space/tab/LF
-        this->currentLine_ = trimHeadSpace(this->currentLine_);
+        // remove space/tab/LF
+        this->currentLine_ = trimSpace(this->currentLine_);
 
         // return true if get command string
         if (!this->currentLine_.empty()) {
@@ -57,7 +57,7 @@ bool Parser::hasMoreCommands()
 
 static std::string getSymbol(std::string str)
 {
-    return str.substr(1, (str.length() - 2));
+    return str.substr(1, (str.length() - 1));
 }
 
 static std::string getDest(std::string str, std::string::size_type pos_eq)
@@ -68,14 +68,14 @@ static std::string getDest(std::string str, std::string::size_type pos_eq)
 static std::string getComp(std::string str, std::string::size_type pos_eq, std::string::size_type pos_sc)
 {
     std::string::size_type start = (pos_eq == std::string::npos) ? 0 : (pos_eq + 1);
-    std::string::size_type end   = (pos_sc == std::string::npos) ? (str.length() - 1) : pos_sc;
+    std::string::size_type end   = (pos_sc == std::string::npos) ? str.length() : pos_sc;
 
     return str.substr(start, (end - start));
 }
 
 static std::string getJump(std::string str, std::string::size_type pos_sc)
 {
-    return str.substr((pos_sc + 1), (str.length() - pos_sc - 2));
+    return str.substr((pos_sc + 1), (str.length() - pos_sc - 1));
 }
 
 void Parser::advance()
