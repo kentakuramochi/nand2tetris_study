@@ -6,6 +6,19 @@
 #include "Code.hpp"
 //#include "SymbolTable.hpp"
 
+std::bitset<16> getACommand(std::string str)
+{
+    return std::bitset<16>(std::strtoul(str.c_str(), nullptr, 10) & 0x7fff);
+}
+
+std::bitset<16> getCCommand(uint8_t comp, uint8_t dest, uint8_t jump)
+{
+    return std::bitset<16>((0xe << 12) |
+                           (comp << 6) |
+                           (dest << 3) |
+                           jump);
+}
+
 int main(int argc, char *argv[])
 {
     if (argc < 2) {
@@ -21,31 +34,30 @@ int main(int argc, char *argv[])
         std::exit(EXIT_FAILURE);
     }
 
+    auto out_file = in_file.substr(0, in_file.find(".asm")) + ".hack";
+
     Parser parser(in_file);
     Code code;
+    std::bitset<16> binCode;
 
-    auto out_file = in_file.substr(0, in_file.find(".asm")) + ".hack";
     std::ofstream ofs(out_file);
-
-    uint16_t val;
 
     while (parser.hasMoreCommands()) {
         parser.advance();
 
         if (parser.commandType() == COMMANDTYPE::A_COMMAND) {
             // A commend
-            val = (std::strtoul(parser.symbol().c_str(), nullptr, 10) & 0x7fff);
+            binCode = getACommand(parser.symbol());
         } else if (parser.commandType() == COMMANDTYPE::C_COMMAND) {
             // C command
-            val = (0xe << 12) |
-                  (code.comp(parser.comp()) << 6) |
-                  (code.dest(parser.dest()) << 3) |
-                  (code.jump(parser.jump()));
+            binCode = getCCommand(code.comp(parser.comp()),
+                                  code.dest(parser.dest()),
+                                  code.jump(parser.jump()));
         } else {
             // Label
         }
 
-        ofs << std::bitset<16>(val) << std::endl;
+        ofs << binCode << std::endl;
     }
 
     ofs.close();
