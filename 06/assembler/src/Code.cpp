@@ -146,4 +146,3 @@ uint8_t Code::jump(const std::string mnemonic)
     // "JMP"
     return 0x7;
 }
-
