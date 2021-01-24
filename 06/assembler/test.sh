@@ -34,6 +34,6 @@ test_asm ../max/MaxL.asm
 test_asm ../pong/PongL.asm
 test_asm ../rect/RectL.asm
 
-#test_asm ../max/Max.asm
-#test_asm ../pong/Pong.asm
-#test_asm ../rect/Rect.asm
+test_asm ../max/Max.asm
+test_asm ../pong/Pong.asm
+test_asm ../rect/Rect.asm

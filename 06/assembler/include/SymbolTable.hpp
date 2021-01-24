@@ -7,19 +7,18 @@
 class SymbolTable
 {
 private:
-    std::unordered_map<std::string, uint32_t> table;
+    std::unordered_map<std::string, uint16_t> table_;
 
 public:
     SymbolTable();
 
-    ~SymbolTable();
+    ~SymbolTable() {}
 
-    void addEntry(std::string symbol, uint32_t address);
+    void addEntry(std::string symbol, uint16_t address);
 
     bool contains(std::string symbol);
 
-    uint32_t getAddress(std::string symbol);
+    uint16_t getAddress(std::string symbol);
 };
 
 #endif
-
