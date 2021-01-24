@@ -5,7 +5,7 @@ SRCDIR := ./src
 INCDIR := ./include
 BINDIR := ./bin
 
-PROG = $(BINDIR)/asm
+PROG = $(BINDIR)/Assembler
 SRCS = $(SRCDIR)/Parser.cpp \
 	$(SRCDIR)/Code.cpp \
 	$(SRCDIR)/SymbolTable.cpp \

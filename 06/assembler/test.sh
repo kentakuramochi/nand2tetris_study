@@ -3,7 +3,7 @@
 # assembler
 HASM_REF=../../../tools/Assembler.sh
 HASM_DIR=./bin
-HASM=${HASM_DIR}/asm
+HASM=${HASM_DIR}/Assembler
 
 test_asm() {
     cp $1 ./
