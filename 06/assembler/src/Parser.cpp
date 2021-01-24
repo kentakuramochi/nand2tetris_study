@@ -49,6 +49,11 @@ static std::string getSymbol(std::string str)
     return str.substr(1, (str.length() - 1));
 }
 
+static std::string getLabelSymbol(std::string str)
+{
+    return str.substr(1, (str.length() - 2));
+}
+
 static std::string getDest(std::string str, std::string::size_type pos_eq)
 {
     return str.substr(0, pos_eq);
@@ -74,7 +79,7 @@ void Parser::advance()
     this->comp_   = "";
     this->jump_   = "";
 
-    // A command
+    // try to parse A command
     auto pos_at = this->currentLine_.find("@");
     if (pos_at != std::string::npos) {
         this->type_   = COMMANDTYPE::A_COMMAND;
@@ -82,19 +87,19 @@ void Parser::advance()
         return;
     }
 
-    // delimiters of C command
-    auto pos_eq = this->currentLine_.find("=");
-    auto pos_sc = this->currentLine_.find(";");
-
-    // if not delimiters, thought as a label
-    if ((pos_eq != std::string::npos) && (pos_sc != std::string::npos)) {
+    // try to parse L command
+    auto pos_par = this->currentLine_.find("(");
+    if (pos_par != std::string::npos) {
         this->type_   = COMMANDTYPE::L_COMMAND;
-        this->symbol_ = getSymbol(this->currentLine_);
+        this->symbol_ = getLabelSymbol(this->currentLine_);
         return;
     }
 
+    // otherwise
     // C command
     this->type_ = COMMANDTYPE::C_COMMAND;
+    auto pos_eq = this->currentLine_.find("=");
+    auto pos_sc = this->currentLine_.find(";");
     if ((pos_eq != std::string::npos) && (pos_sc != std::string::npos)) {
         // dest=comp;jmp
         this->dest_ = getDest(this->currentLine_, pos_eq);
