@@ -32,10 +32,7 @@ uint8_t Code::dest(const std::string mnemonic)
 
 uint8_t Code::comp(const std::string mnemonic)
 {
-    if (!mnemonic.compare("0")) {
-        // 010 1010
-        return 0x2a;
-    } else if (!mnemonic.compare("1")) {
+    if (!mnemonic.compare("1")) {
         // 011 1111
         return 0x3f;
     } else if (!mnemonic.compare("-1")) {
@@ -69,8 +66,8 @@ uint8_t Code::comp(const std::string mnemonic)
         // 111 0011
         return 0x73;
     } else if (!mnemonic.compare("D+1")) {
-        // 011 1111
-        return 0x3f;
+        // 001 1111
+        return 0x1f;
     } else if (!mnemonic.compare("A+1")) {
         // 011 0111
         return 0x37;
@@ -79,7 +76,7 @@ uint8_t Code::comp(const std::string mnemonic)
         return 0x77;
     } else if (!mnemonic.compare("D-1")) {
         // 000 1110
-        return 0x3f;
+        return 0x0e;
     } else if (!mnemonic.compare("A-1")) {
         // 011 0010
         return 0x32;
@@ -111,11 +108,11 @@ uint8_t Code::comp(const std::string mnemonic)
         // 100 0000
         return 0x40;
     } else if (!mnemonic.compare("D|A")) {
-        // 010 0101
-        return 0x25;
+        // 001 0101
+        return 0x15;
     } else if (!mnemonic.compare("D|M")) {
-        // 110 0101
-        return 0x65;
+        // 101 0101
+        return 0x55;
     }
 
     // "0": 010 1010
@@ -140,7 +137,7 @@ uint8_t Code::jump(const std::string mnemonic)
     } else if (mnemonic.compare("JNE") == 0) {
         return 0x5;
     } else if (mnemonic.compare("JLE") == 0) {
-        return 0x1;
+        return 0x6;
     }
 
     // "JMP"
