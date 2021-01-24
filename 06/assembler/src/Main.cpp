@@ -6,9 +6,14 @@
 #include "Code.hpp"
 //#include "SymbolTable.hpp"
 
-std::bitset<16> getACommand(std::string str)
+static bool isDigit(std::string str)
 {
-    return std::bitset<16>(std::strtoul(str.c_str(), nullptr, 10) & 0x7fff);
+    return (str.find_first_not_of("0123456789") == std::string::npos);
+}
+
+static std::bitset<16> getACommand(uint16_t value)
+{
+    return std::bitset<16>(value & 0x7fff);
 }
 
 std::bitset<16> getCCommand(uint8_t comp, uint8_t dest, uint8_t jump)
@@ -33,7 +38,7 @@ int main(int argc, char *argv[])
         std::exit(EXIT_FAILURE);
     }
 
-    // open source file
+    // open input stream
     std::ifstream ifs(in_file);
     if (!ifs) {
         std::cerr << "error: failed to open \"" << in_file << "\"" << std::endl;
@@ -45,6 +50,7 @@ int main(int argc, char *argv[])
     Code code;
     std::bitset<16> binCode;
 
+    // open outut stream
     auto out_file = in_file.substr(0, in_file.find(".asm")) + ".hack";
     std::ofstream ofs(out_file);
     if (!ofs) {
@@ -54,12 +60,18 @@ int main(int argc, char *argv[])
         std::exit(EXIT_FAILURE);
     }
 
+    // parse assembly source
     while (parser.hasMoreCommands()) {
         parser.advance();
 
         if (parser.commandType() == COMMANDTYPE::A_COMMAND) {
             // A commend
-            binCode = getACommand(parser.symbol());
+            auto symbol = parser.symbol();
+
+            if (isDigit(symbol)) {
+                auto value = std::strtoul(symbol.c_str(), nullptr, 10);
+                binCode = getACommand(value);
+            }
         } else if (parser.commandType() == COMMANDTYPE::C_COMMAND) {
             // C command
             binCode = getCCommand(code.comp(parser.comp()),
