@@ -2,17 +2,6 @@
 
 #include <iostream>
 
-Parser::Parser(std::string asmFile)
-{
-    this->type_ = COMMANDTYPE::L_COMMAND;
-    this->ifs_.open(asmFile);
-}
-
-Parser::~Parser()
-{
-    this->ifs_.close();
-}
-
 static std::string trimComment(std::string str)
 {
     auto pos_ds = str.find("//");

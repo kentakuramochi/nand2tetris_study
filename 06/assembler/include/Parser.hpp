@@ -15,7 +15,7 @@ enum class COMMANDTYPE
 class Parser
 {
 private:
-    std::ifstream   ifs_;
+    std::ifstream&  ifs_;
     std::string     currentLine_;
     COMMANDTYPE     type_;
     std::string     symbol_;
@@ -24,11 +24,10 @@ private:
     std::string     jump_;
 
 public:
-    Parser(std::string asmFile);
-    Parser(char* asmFile) :
-        Parser(std::string(asmFile)) {};
+    Parser(std::ifstream& ifs) :
+        ifs_(ifs) {}
 
-    ~Parser();
+    ~Parser() { this->ifs_.close(); }
 
     bool hasMoreCommands();
 
