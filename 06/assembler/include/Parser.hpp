@@ -2,7 +2,6 @@
 #define PARSER_H
 
 #include <string>
-//#include <ifstream>
 #include <fstream>
 
 enum class COMMANDTYPE
@@ -27,18 +26,36 @@ public:
     Parser(std::ifstream& ifs) :
         ifs_(ifs) {}
 
-    ~Parser() { this->ifs_.close(); }
+    ~Parser()
+    {
+        this->ifs_.close();
+    }
 
     bool hasMoreCommands();
 
     void advance();
 
-    COMMANDTYPE commandType() { return this->type_; }
+    COMMANDTYPE commandType()
+    {
+        return this->type_;
+    }
 
-    std::string symbol() { return this->symbol_; }
-    std::string dest()   { return this->dest_; }
-    std::string comp()   { return this->comp_; }
-    std::string jump()   { return this->jump_; }
+    std::string symbol()
+    {
+        return this->symbol_;
+    }
+    std::string dest()
+    {
+        return this->dest_;
+    }
+    std::string comp()
+    {
+        return this->comp_;
+    }
+    std::string jump()
+    {
+        return this->jump_;
+    }
 };
 
 #endif

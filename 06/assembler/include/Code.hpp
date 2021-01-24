@@ -8,9 +8,9 @@ class Code {
 private:
 
 public:
-    Code();
+    Code() {}
 
-    ~Code();
+    ~Code() {}
 
     uint8_t dest(const std::string mnemonic);
 

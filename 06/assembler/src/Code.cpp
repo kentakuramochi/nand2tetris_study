@@ -1,13 +1,5 @@
 #include "Code.hpp"
 
-Code::Code()
-{
-}
-
-Code::~Code()
-{
-}
-
 uint8_t Code::dest(const std::string mnemonic)
 {
     uint8_t ret = 0x0;
